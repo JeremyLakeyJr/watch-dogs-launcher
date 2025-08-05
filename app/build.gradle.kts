@@ -76,6 +76,9 @@ dependencies {
     // Accompanist for Drawables
     implementation("com.google.accompanist:accompanist-drawablepainter:0.34.0")
 
+    // Rhino for scripting
+    implementation("org.mozilla:rhino-android:1.7.14")
+
     // Testing
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
