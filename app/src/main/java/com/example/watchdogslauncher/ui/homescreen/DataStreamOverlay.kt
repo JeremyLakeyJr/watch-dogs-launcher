@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import com.example.watchdogslauncher.ui.theme.WdGreen
+import com.example.watchdogslauncher.ui.theme.WdRed
 import kotlinx.coroutines.isActive
 import kotlin.random.Random
 
@@ -34,6 +35,14 @@ fun DataStreamOverlay() {
         }
     }
 
+    val glitchTextPaint = remember {
+        android.graphics.Paint().apply {
+            isAntiAlias = true
+            textSize = 24f
+            color = WdRed.copy(alpha = 0.5f).toArgb()
+        }
+    }
+
     val columnData = remember {
         val characters = "0123456789ABCDEF"
         (0..20).map {
@@ -48,7 +57,13 @@ fun DataStreamOverlay() {
         drawIntoCanvas { canvas ->
             columnData.forEach { (text, speed, x) ->
                 val y = (time * 0.1f * speed) % (size.height * 1.5f)
-                canvas.nativeCanvas.drawText(text, x, y, textPaint)
+                if (Random.nextFloat() < 0.01f) {
+                    val glitchX = x + Random.nextFloat() * 20 - 10
+                    val glitchY = y + Random.nextFloat() * 20 - 10
+                    canvas.nativeCanvas.drawText(text, glitchX, glitchY, glitchTextPaint)
+                } else {
+                    canvas.nativeCanvas.drawText(text, x, y, textPaint)
+                }
             }
         }
     }
