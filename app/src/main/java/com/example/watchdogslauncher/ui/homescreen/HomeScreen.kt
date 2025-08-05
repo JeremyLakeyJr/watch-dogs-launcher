@@ -10,6 +10,7 @@ import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -31,6 +32,7 @@ import com.example.watchdogslauncher.R
 import com.example.watchdogslauncher.SettingsActivity
 import com.example.watchdogslauncher.model.AppInfo
 import com.example.watchdogslauncher.ui.appdrawer.AppDrawer
+import com.example.watchdogslauncher.ui.terminal.Terminal
 import com.example.watchdogslauncher.ui.theme.WatchDogsLauncherTheme
 
 @Composable
@@ -48,6 +50,7 @@ fun HomeScreen() {
         .sortedBy { it.label.toString() }
 
     var showAppDrawer by remember { mutableStateOf(false) }
+    var showTerminal by remember { mutableStateOf(false) }
     val mediaPlayer = remember { MediaPlayer.create(context, R.raw.hack_sound) }
 
     Box(
@@ -78,16 +81,32 @@ fun HomeScreen() {
         if (showAppDrawer) {
             AppDrawer()
         }
-        Image(
-            painter = painterResource(id = android.R.drawable.ic_menu_preferences),
-            contentDescription = "Settings",
+        if (showTerminal) {
+            Terminal()
+        }
+        Row(
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .padding(16.dp)
-                .clickable {
-                    context.startActivity(Intent(context, SettingsActivity::class.java))
-                }
-        )
+        ) {
+            Image(
+                painter = painterResource(id = android.R.drawable.ic_dialog_info),
+                contentDescription = "Terminal",
+                modifier = Modifier
+                    .padding(end = 16.dp)
+                    .clickable {
+                        showTerminal = !showTerminal
+                    }
+            )
+            Image(
+                painter = painterResource(id = android.R.drawable.ic_menu_preferences),
+                contentDescription = "Settings",
+                modifier = Modifier
+                    .clickable {
+                        context.startActivity(Intent(context, SettingsActivity::class.java))
+                    }
+            )
+        }
     }
 }
 
