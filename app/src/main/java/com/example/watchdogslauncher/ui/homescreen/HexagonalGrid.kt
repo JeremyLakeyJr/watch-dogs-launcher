@@ -1,0 +1,64 @@
+
+package com.example.watchdogslauncher.ui.homescreen
+
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Path
+import com.example.watchdogslauncher.ui.theme.WdBlue
+import kotlin.math.cos
+import kotlin.math.sin
+import kotlin.math.sqrt
+
+@Composable
+fun HexagonalGrid() {
+    val infiniteTransition = rememberInfiniteTransition()
+    val pulse by infiniteTransition.animateFloat(
+        initialValue = 0.5f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1500, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        )
+    )
+
+    Canvas(modifier = Modifier.fillMaxSize()) {
+        val width = size.width
+        val height = size.height
+        val hexSize = 60f
+        val hexWidth = sqrt(3f) * hexSize
+        val hexHeight = 2 * hexSize
+
+        for (row in 0..(height / (hexHeight * 0.75f)).toInt()) {
+            for (col in 0..(width / hexWidth).toInt()) {
+                val x = col * hexWidth + (if (row % 2 == 0) 0f else hexWidth / 2)
+                val y = row * hexHeight * 0.75f
+
+                val hexPath = Path().apply {
+                    for (i in 0..5) {
+                        val angle = 60 * i - 30
+                        val rad = Math.toRadians(angle.toDouble()).toFloat()
+                        val px = x + hexSize * cos(rad)
+                        val py = y + hexSize * sin(rad)
+                        if (i == 0) moveTo(px, py) else lineTo(px, py)
+                    }
+                    close()
+                }
+                drawPath(
+                    path = hexPath,
+                    color = WdBlue.copy(alpha = 0.1f * pulse),
+                    style = androidx.compose.ui.graphics.drawscope.Stroke(width = 1f)
+                )
+            }
+        }
+    }
+}
