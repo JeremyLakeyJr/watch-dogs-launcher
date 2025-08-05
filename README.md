@@ -49,7 +49,7 @@ Advanced Features
 
     ⌨️ Terminal Integration: A built-in terminal for advanced users to execute shell commands directly from the home screen.
 
-    🤖 Scripting Support: Write simple scripts to automate tasks within the launcher.
+    🤖 Scripting Support: Write simple scripts to automate tasks within the launcher.(possible bitchat integration in the future)
 
     🎨 Powerful Theming Engine: Take control and customize colors, fonts, and animations to create your perfect DedSec-inspired setup.
 
