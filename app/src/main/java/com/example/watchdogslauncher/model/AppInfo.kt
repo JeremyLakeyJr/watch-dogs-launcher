@@ -1,4 +1,3 @@
-
 package com.example.watchdogslauncher.model
 
 import android.graphics.drawable.Drawable

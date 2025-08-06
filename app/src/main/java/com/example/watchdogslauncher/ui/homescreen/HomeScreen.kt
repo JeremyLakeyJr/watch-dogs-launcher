@@ -76,7 +76,12 @@ fun HomeScreen() {
             TargetingSystem(apps = apps)
         }
         if (showAppDrawer) {
-            AppDrawer()
+            AppDrawer(apps = apps) { app ->
+                val intent = packageManager.getLaunchIntentForPackage(app.packageName.toString())
+                intent?.let {
+                    context.startActivity(it)
+                }
+            }
         }
         if (showTerminal) {
             Terminal()

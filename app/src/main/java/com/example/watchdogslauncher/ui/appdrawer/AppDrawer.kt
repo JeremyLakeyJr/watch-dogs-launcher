@@ -1,65 +1,55 @@
-
 package com.example.watchdogslauncher.ui.appdrawer
 
-import android.content.pm.PackageManager
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.watchdogslauncher.model.AppInfo
-import com.example.watchdogslauncher.ui.homescreen.StyledAppIcon
+import com.google.accompanist.drawablepainter.rememberDrawablePainter
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppDrawer() {
-    val context = LocalContext.current
-    val packageManager = context.packageManager
-    val apps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
-        .map {
-            AppInfo(
-                label = it.loadLabel(packageManager),
-                packageName = it.packageName,
-                icon = it.loadIcon(packageManager)
-            )
-        }
-        .sortedBy { it.label.toString() }
-
-    var searchQuery by remember { mutableStateOf("") }
-
-    val filteredApps = if (searchQuery.isEmpty()) {
-        apps
-    } else {
-        apps.filter { it.label.toString().contains(searchQuery, ignoreCase = true) }
-    }
-
+fun AppDrawer(apps: List<AppInfo>, onAppClick: (AppInfo) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background.copy(alpha = 0.9f))
             .padding(16.dp)
     ) {
-        TextField(
-            value = searchQuery,
-            onValueChange = { searchQuery = it },
-            label = { Text("Search") }
-        )
-        LazyVerticalGrid(
-            columns = GridCells.Adaptive(minSize = 128.dp)
-        ) {
-            items(filteredApps) { app ->
-                StyledAppIcon(app = app)
+        LazyColumn {
+            items(apps) { app ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { onAppClick(app) }
+                        .padding(vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Image(
+                        painter = rememberDrawablePainter(drawable = app.icon),
+                        contentDescription = app.label.toString(),
+                        modifier = Modifier.size(48.dp)
+                    )
+                    Text(
+                        text = app.label.toString(),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        modifier = Modifier.padding(start = 16.dp)
+                    )
+                }
             }
         }
     }
