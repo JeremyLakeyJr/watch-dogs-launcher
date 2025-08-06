@@ -65,6 +65,8 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
 
+    // --- DataStore ---
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
 
     // --- Your Other Libraries ---
     implementation("com.google.accompanist:accompanist-drawablepainter:0.34.0")

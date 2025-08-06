@@ -1,45 +1,52 @@
-
 package com.example.watchdogslauncher.ui.theme
 
-import androidx.compose.foundation.isSystemInDarkTheme
+import android.app.Activity
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
+
+private fun createDarkColorScheme(primary: Color) = darkColorScheme(
+    primary = primary,
+    secondary = HackerPurple,
+    tertiary = GlitchPink,
+    background = DarkBlue,
+    surface = DarkBlue,
+    onPrimary = OffWhite,
+    onSecondary = OffWhite,
+    onTertiary = OffWhite,
+    onBackground = OffWhite,
+    onSurface = OffWhite,
+)
 
 @Composable
 fun WatchDogsLauncherTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    theme: ThemeModel = DefaultTheme,
+    themeColorName: String = "HackerBlue",
     content: @Composable () -> Unit
 ) {
-    val colors = if (darkTheme) {
-        darkColorScheme(
-            primary = theme.primaryColor,
-            secondary = theme.secondaryColor,
-            background = theme.backgroundColor,
-            surface = theme.backgroundColor,
-            onPrimary = theme.textColor,
-            onSecondary = theme.textColor,
-            onBackground = theme.textColor,
-            onSurface = theme.textColor,
-        )
-    } else {
-        lightColorScheme(
-            primary = theme.primaryColor,
-            secondary = theme.secondaryColor,
-            background = theme.backgroundColor,
-            surface = theme.backgroundColor,
-            onPrimary = theme.textColor,
-            onSecondary = theme.textColor,
-            onBackground = theme.textColor,
-            onSurface = theme.textColor,
-        )
+    val primaryColor = when (themeColorName) {
+        "HackerPurple" -> HackerPurple
+        "GlitchPink" -> GlitchPink
+        else -> HackerBlue
+    }
+    val colorScheme = createDarkColorScheme(primary = primaryColor)
+
+    val view = LocalView.current
+    if (!view.isInEditMode) {
+        SideEffect {
+            val window = (view.context as Activity).window
+            window.statusBarColor = colorScheme.primary.toArgb()
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
+        }
     }
 
     MaterialTheme(
-        colorScheme = colors,
-        typography = Typography,
+        colorScheme = colorScheme,
+        typography = AppTypography,
         content = content
     )
 }
