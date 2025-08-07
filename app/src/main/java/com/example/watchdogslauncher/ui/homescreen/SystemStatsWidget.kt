@@ -71,7 +71,16 @@ fun SystemStatsWidget() {
         enter = slideInVertically(initialOffsetY = { it }),
         exit = slideOutVertically(targetOffsetY = { it })
     ) {
-        AppDrawer()
+        AppDrawer(
+            apps = apps,
+            onAppClick = { appInfo ->
+                val launchIntent = context.packageManager.getLaunchIntentForPackage(appInfo.packageName)
+                context.startActivity(launchIntent)
+            },
+            onAppDragStart = { appInfo ->
+                // TODO: Implement drag and drop
+            }
+        )
     }
 
     AnimatedVisibility(
