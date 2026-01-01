@@ -13,7 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.watchdogslauncher.data.SettingsRepository
-import com.example.watchdogslauncher.ui.homescreen.HomeScreen
+import com.example.watchdogslauncher.ui.homescreen.EnhancedHomeScreen
 import com.example.watchdogslauncher.ui.theme.WatchDogsLauncherTheme
 
 class MainActivity : ComponentActivity() {
@@ -25,7 +25,7 @@ class MainActivity : ComponentActivity() {
             WatchDogsLauncherTheme(themeColorName = themeColor) {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    HomeScreen()
+                    EnhancedHomeScreen()
                 }
             }
         }
@@ -36,6 +36,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun DefaultPreview() {
     WatchDogsLauncherTheme {
-        HomeScreen()
+        EnhancedHomeScreen()
     }
 }
