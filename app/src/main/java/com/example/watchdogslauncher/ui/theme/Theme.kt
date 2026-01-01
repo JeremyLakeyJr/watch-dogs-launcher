@@ -26,11 +26,26 @@ private fun createDarkColorScheme(primary: Color) = darkColorScheme(
 @Composable
 fun WatchDogsLauncherTheme(
     themeColorName: String = "HackerBlue",
+    customColor: Color? = null,
     content: @Composable () -> Unit
 ) {
-    val primaryColor = when (themeColorName) {
+    val primaryColor = customColor ?: when (themeColorName) {
         "HackerPurple" -> HackerPurple
         "GlitchPink" -> GlitchPink
+        "CyberGreen" -> CyberGreen
+        "NeonPink" -> NeonPink
+        "ElectricBlue" -> ElectricBlue
+        "MatrixGreen" -> MatrixGreen
+        "TerminalAmber" -> TerminalAmber
+        "DarkPurple" -> DarkPurple
+        "CrimsonRed" -> CrimsonRed
+        "TealCyan" -> TealCyan
+        "LimeGreen" -> LimeGreen
+        "VividOrange" -> VividOrange
+        "DeepPink" -> DeepPink
+        "AquaBlue" -> AquaBlue
+        "VioletPurple" -> VioletPurple
+        "YellowGold" -> YellowGold
         else -> HackerBlue
     }
     val colorScheme = createDarkColorScheme(primary = primaryColor)
