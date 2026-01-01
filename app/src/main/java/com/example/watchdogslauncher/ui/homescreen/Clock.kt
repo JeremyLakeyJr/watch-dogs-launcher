@@ -1,22 +1,26 @@
 
 package com.example.watchdogslauncher.ui.homescreen
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.watchdogslauncher.ui.theme.WdBlue
 import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.random.Random
 
 @Composable
-fun Clock() {
+fun Clock(format: String = "24h", modifier: Modifier = Modifier) {
     var currentTime by remember { mutableStateOf(System.currentTimeMillis()) }
     var glitchTrigger by remember { mutableStateOf(0) }
 
@@ -24,23 +28,44 @@ fun Clock() {
         while (true) {
             delay(1000)
             currentTime = System.currentTimeMillis()
-            if (Random.nextFloat() > 0.8f) {
+            if (Random.nextFloat() > 0.9f) {
                 glitchTrigger++
             }
         }
     }
 
-    val sdf = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+    val timePattern = if (format == "12h") "hh:mm a" else "HH:mm"
+    val datePattern = "EEE, MMM dd"
+    
+    val sdf = SimpleDateFormat(timePattern, Locale.getDefault())
+    val dateSdf = SimpleDateFormat(datePattern, Locale.getDefault())
     val timeText = sdf.format(Date(currentTime))
+    val dateText = dateSdf.format(Date(currentTime))
 
-    GlitchText(
-        text = timeText,
-        glitchTrigger = glitchTrigger
-    )
+    Column(
+        modifier = modifier
+            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.3f))
+            .padding(12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        GlitchText(
+            text = timeText,
+            glitchTrigger = glitchTrigger,
+            fontSize = 32.sp
+        )
+        Text(
+            text = dateText,
+            style = MaterialTheme.typography.bodySmall.copy(
+                fontFamily = FontFamily.Monospace,
+                fontSize = 12.sp
+            ),
+            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f)
+        )
+    }
 }
 
 @Composable
-fun GlitchText(text: String, glitchTrigger: Int) {
+fun GlitchText(text: String, glitchTrigger: Int, fontSize: androidx.compose.ui.unit.TextUnit = 64.sp) {
     var localGlitchTrigger by remember { mutableStateOf(glitchTrigger) }
     var glitchOffset by remember { mutableStateOf(0f) }
     var glitchColor by remember { mutableStateOf(Color.Transparent) }
@@ -59,8 +84,9 @@ fun GlitchText(text: String, glitchTrigger: Int) {
     Text(
         text = text,
         style = TextStyle(
-            color = WdBlue,
-            fontSize = 64.sp
+            color = MaterialTheme.colorScheme.primary,
+            fontSize = fontSize,
+            fontFamily = FontFamily.Monospace
         ),
         modifier = Modifier.graphicsLayer {
             translationX = glitchOffset

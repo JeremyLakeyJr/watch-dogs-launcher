@@ -61,6 +61,8 @@ fun EnhancedHomeScreen() {
     var showSettings by remember { mutableStateOf(false) }
     var showTerminal by remember { mutableStateOf(false) }
     var showBitChat by remember { mutableStateOf(false) }
+    var showQuickSettings by remember { mutableStateOf(false) }
+    var showNotifications by remember { mutableStateOf(false) }
     val desktopApps = remember { mutableStateOf<List<AppInfo>>(emptyList()) }
     
     // Gesture detection state
@@ -72,8 +74,8 @@ fun EnhancedHomeScreen() {
             "AppDrawer" -> showAppDrawer = true
             "Terminal" -> showTerminal = true
             "Settings" -> showSettings = true
-            "Notifications" -> { /* TODO: Implement notifications */ }
-            "QuickSettings" -> { /* TODO: Implement quick settings */ }
+            "Notifications" -> showNotifications = true
+            "QuickSettings" -> showQuickSettings = true
             "BitChat" -> showBitChat = true
         }
     }
@@ -149,13 +151,14 @@ fun EnhancedHomeScreen() {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Top
                 ) {
                     if (settings.enableClock) {
                         Clock(format = settings.clockFormat)
                     }
                     if (settings.enableSystemStats) {
-                        SystemStatsWidget()
+                        CompactSystemStatsWidget()
                     }
                 }
                 
@@ -247,6 +250,24 @@ fun EnhancedHomeScreen() {
                 exit = slideOutVertically(targetOffsetY = { it })
             ) {
                 BitChatScreen()
+            }
+
+            // Quick Settings
+            AnimatedVisibility(
+                visible = showQuickSettings,
+                enter = slideInVertically(initialOffsetY = { -it }),
+                exit = slideOutVertically(targetOffsetY = { -it })
+            ) {
+                QuickSettingsPanel(onDismiss = { showQuickSettings = false })
+            }
+
+            // Notification Center
+            AnimatedVisibility(
+                visible = showNotifications,
+                enter = slideInVertically(initialOffsetY = { -it }),
+                exit = slideOutVertically(targetOffsetY = { -it })
+            ) {
+                NotificationCenter(onDismiss = { showNotifications = false })
             }
         }
     }
